@@ -1,7 +1,7 @@
 import { QUESTIONS, LEVEL_LABEL } from "./questions.js";
 import { createHost } from "./host.js";
 import { sfx, startMusic, stopMusic, setMuted } from "./audio.js";
-import { speak, cancelSpeech, setVoiceEnabled } from "./voice.js";
+import { playVoice, delayVoice, cancelSpeech, setVoiceEnabled, questionKey } from "./voice.js";
 import { confetti } from "./confetti.js";
 
 // Escada de prêmios (pontos). Índice 0 = pergunta 1.
@@ -12,15 +12,6 @@ const TOTAL = 16;
 const TIME = 30;
 // Nível de dificuldade de cada rodada
 const PLAN = [1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3];
-
-// Bordões próprios do apresentador (não são falas do SBT)
-const LINES = {
-  inicio: "Boa noite, boa noite! Bem-vindos ao Show da Química!",
-  acerto: "Isso aí, campeão!",
-  errou: "Que pena! Tá certo disso? Vamos estudar mais e tentar de novo!",
-  parou: "Sábia decisão! Leva pra casa os seus pontos!",
-  milhao: "Vale um milhão de pontos, hein! Parabéns, campeão da química!",
-};
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n) => n.toLocaleString("pt-BR");
@@ -42,7 +33,8 @@ function shuffle(a) {
 }
 
 function pickFromLevel(level, used) {
-  const pool = QUESTIONS.filter((q) => q.n === level && !used.has(q));
+  let pool = QUESTIONS.filter((q) => q.n === level && !used.has(q));
+  if (!pool.length) pool = QUESTIONS.filter((q) => !used.has(q));
   if (!pool.length) return null;
   const q = pool[Math.floor(Math.random() * pool.length)];
   used.add(q);
@@ -62,8 +54,8 @@ function show(id) {
 
 // ---------- fluxo ----------
 function startGame() {
-  sfx.jingle(); // primeiro gesto do usuário libera o áudio
-  if (opts.sound) startMusic();
+  cancelSpeech();
+  stopTimer();
   const { qs, used } = drawRun();
   const debug = Number(new URLSearchParams(location.search).get("debug")) || 0;
   S = {
@@ -71,16 +63,36 @@ function startGame() {
     used,
     idx: 0,
     cur: null,
-    locked: false,
+    locked: true,
     ended: false,
+    lastMeme: false,
     lifelines: { cartas: true, plateia: true, pular: 3 },
   };
   if (debug >= 1 && debug <= TOTAL) S.idx = debug - 1; // atalho para testes: ?debug=16
   show("screen-game");
-  loadRound();
+  $("round").textContent = "ABERTURA";
+  $("prize").textContent = "Show da Química";
+  $("question").textContent = "Prepare-se! Vai começar o Show da Química!";
+  $("options").innerHTML = "";
+  $("feedback").classList.add("hidden");
+  $("poll").classList.add("hidden");
+  $("bubble").textContent = "Vai começar o show!";
+  renderLadder();
+  renderLifelines();
+
+  const runRef = S;
+  setMood("happy");
+  setTalking(true);
+  playVoice(["inicio", "intro"], () => {
+    if (S !== runRef || S.ended) return;
+    setTalking(false);
+    if (opts.sound) startMusic();
+    loadRound();
+  });
 }
 
 function loadRound() {
+  cancelSpeech();
   stopTimer();
   const q = S.qs[S.idx];
   const list = shuffle(q.o.map((t, i) => ({ t, ok: i === 0, hid: false })));
@@ -92,25 +104,43 @@ function loadRound() {
   $("question").textContent = q.q;
   $("feedback").classList.add("hidden");
   $("poll").classList.add("hidden");
-  $("bubble").textContent = `Pergunta ${S.idx + 1}! Vale ${fmt(LADDER[S.idx])} pontos.`;
+  const defaultBubble = `Pergunta ${S.idx + 1}! Vale ${fmt(LADDER[S.idx])} pontos.`;
+  $("bubble").textContent = defaultBubble;
   timeLeft = TIME;
   setTimerText();
   renderOptions();
   renderLadder();
   renderLifelines();
 
-  const text =
-    `Pergunta ${S.idx + 1}, valendo ${fmt(LADDER[S.idx])} pontos. ${q.q} ` +
-    list.map((o, i) => `${"ABCD"[i]}: ${o.t}.`).join(" ");
   const cur = S.cur;
-  setMood("point");
-  setTalking(true);
-  speak(text, () => {
-    setTalking(false);
-    setMood("idle");
-    // só inicia o cronômetro se ainda for esta pergunta e ninguém respondeu
-    if (S && S.cur === cur && !S.locked) startTimer();
-  });
+  const qKey = questionKey(q.id);
+  const useMeme = !S.lastMeme && Math.random() < 0.35;
+  S.lastMeme = useMeme;
+
+  const startQuestionVoice = () => {
+    if (!S || S.cur !== cur || S.locked) return;
+    $("bubble").textContent = defaultBubble;
+    sfx.question();
+    setMood("point");
+    setTalking(true);
+    delayVoice(550, () => {
+      if (!S || S.cur !== cur || S.locked) return;
+      playVoice(qKey, () => {
+        setTalking(false);
+        setMood("idle");
+        if (S && S.cur === cur && !S.locked) startTimer();
+      });
+    });
+  };
+
+  if (useMeme && opts.voice) {
+    $("bubble").textContent = "Posso perguntar?";
+    setMood("point");
+    setTalking(true);
+    playVoice("posso-perguntar", startQuestionVoice);
+  } else {
+    startQuestionVoice();
+  }
 }
 
 function renderOptions() {
@@ -132,6 +162,8 @@ function renderOptions() {
 function answer(i) {
   if (!S || S.locked) return;
   S.locked = true;
+  cancelSpeech();
+  setTalking(false);
   stopTimer();
   const list = S.cur.list;
   const btns = [...$("options").children];
@@ -159,13 +191,13 @@ function correctAnswer() {
     victory();
     return;
   }
-  speak(LINES.acerto, () => {});
+  setTalking(true);
+  playVoice("acerto", () => setTalking(false));
   renderLadder();
   $("fb-title").textContent = `✔ Acertou! +${fmt(won)} pontos`;
   $("fb-text").textContent = S.cur.q.e;
   $("feedback").classList.remove("hidden");
   renderLifelines();
-  setMood("idle");
 }
 
 function wrongAnswer(timeout) {
@@ -207,8 +239,9 @@ function endGame(kind, prize, msg) {
   $("end-prize").textContent = `${fmt(prize)} pontos`;
   $("end-text").textContent = msg;
   show("screen-end");
-  setMood("idle");
-  speak(LINES[kind] || LINES.errou, () => {});
+  setMood(kind === "errou" ? "sad" : "happy");
+  setTalking(true);
+  playVoice(kind || "errou", () => setTalking(false));
 }
 
 // ---------- escada e ajudas ----------
@@ -320,6 +353,10 @@ function setSound(v) {
 function setVoice(v) {
   opts.voice = v;
   setVoiceEnabled(v);
+  if (!v) {
+    setTalking(false);
+    if (S && S.cur && !S.locked && !S.ended && !timerId) startTimer();
+  }
   updateToggles();
 }
 

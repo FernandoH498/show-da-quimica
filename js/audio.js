@@ -3,6 +3,8 @@
 let ctx = null;
 let muted = false;
 let musicTimer = null;
+const questionAudio = new Audio("assets/pergunta.mp3");
+questionAudio.preload = "auto";
 
 function ac() {
   if (!ctx) {
@@ -16,6 +18,10 @@ function ac() {
 
 export function setMuted(v) {
   muted = v;
+  if (v) {
+    questionAudio.pause();
+    questionAudio.currentTime = 0;
+  }
 }
 
 function tone(freq, dur, type = "square", vol = 0.12, when = 0) {
@@ -68,6 +74,11 @@ export function crowd(dur = 1.5) {
 export const sfx = {
   jingle() {
     seq([[523, 0.14], [659, 0.14], [784, 0.14], [1047, 0.28], [784, 0.14], [1047, 0.45]]);
+  },
+  question() {
+    if (muted) return;
+    questionAudio.currentTime = 0;
+    questionAudio.play().catch(() => {});
   },
   correct() {
     seq([[660, 0.1], [880, 0.1], [1320, 0.25]]);

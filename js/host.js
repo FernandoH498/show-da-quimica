@@ -1,104 +1,67 @@
-// Seu Valêncio — apresentador ORIGINAL em pixel art, desenhado em <canvas>.
-// Animações: idle (balança), point (aponta), happy (braços pra cima), sad, e boca
-// abrindo/fechando enquanto a voz fala (setTalking).
+// Apresentador em pixel art usando spritesheet (assets/host-sprites.png).
+// Frames: 0=idle (mic baixo), 1=falando/animado, 2=apontando, 3=gesto/dúvida, 4=composto (mic no peito).
 
-export function createHost(canvas, P = 10) {
-  canvas.width = 24 * P;
-  canvas.height = 30 * P;
+const FRAMES = [
+  { x: 22, y: 98, w: 193, h: 504 },
+  { x: 223, y: 100, w: 197, h: 500 },
+  { x: 430, y: 101, w: 180, h: 500 },
+  { x: 638, y: 100, w: 192, h: 501 },
+  { x: 840, y: 98, w: 174, h: 502 },
+];
+
+const sheet = new Image();
+sheet.src = "assets/host-sprites.png";
+
+export function createHost(canvas) {
+  canvas.width = 220;
+  canvas.height = 524;
   const ctx = canvas.getContext("2d");
-  const C = {
-    skin: "#f2c49b", hair: "#e8e6e1", suit: "#d7263d", suit2: "#8e1b2c",
-    tie: "#ffd23f", shirt: "#ffffff", eye: "#222", mouth: "#7a1f1f", mic: "#9aa3b5",
-    legs: "#1d1d2b",
-  };
   const s = { mood: "idle", talking: false, t: 0, iv: null };
+
+  function pickFrame(t) {
+    if (s.talking) {
+      const step = Math.floor(t / 3) % 2;
+      if (s.mood === "point") return step === 0 ? 2 : 1;
+      if (s.mood === "happy") return step === 0 ? 1 : 2;
+      return step === 0 ? 1 : 3;
+    }
+    if (s.mood === "point") return 2;
+    if (s.mood === "happy") return Math.floor(t / 4) % 2 === 0 ? 1 : 2;
+    if (s.mood === "sad") return 3;
+    return Math.floor(t / 18) % 2 === 0 ? 0 : 4;
+  }
 
   function frame() {
     const t = s.t++;
-    const bob = Math.floor(t / 8) % 2;
-    const jump = s.mood === "happy" ? -(Math.floor(t / 4) % 2) : 0;
+    const bob = (Math.floor(t / 8) % 2) * 3;
+    const jump = s.mood === "happy" ? -(Math.floor(t / 4) % 2) * 10 : 0;
     const dy = bob + jump;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const R = (x, y, w, h, c) => {
-      ctx.fillStyle = c;
-      ctx.fillRect(x * P, (y + dy) * P, w * P, h * P);
-    };
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // sombra no chão
     ctx.fillStyle = "rgba(0,0,0,.35)";
-    ctx.fillRect(6 * P, 28 * P, 12 * P, P);
+    ctx.beginPath();
+    ctx.ellipse(canvas.width / 2, canvas.height - 10, 72, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    // pernas e sapatos
-    R(8, 24, 3, 4, C.legs);
-    R(13, 24, 3, 4, C.legs);
-    R(7, 27, 4, 1, "#111");
-    R(13, 27, 4, 1, "#111");
+    if (!sheet.complete || !sheet.naturalWidth) return;
 
-    // terno (lapelas) + camisa + gravata
-    R(6, 14, 12, 10, C.suit);
-    R(9, 14, 2, 4, C.suit2);
-    R(13, 14, 2, 4, C.suit2);
-    R(11, 14, 2, 3, C.shirt);
-    R(11, 17, 2, 5, C.tie);
+    const f = FRAMES[pickFrame(t)];
+    const dx = Math.round((canvas.width - f.w) / 2);
+    const y = canvas.height - 12 - f.h + dy;
 
-    // cabeça + cabelo penteado para trás
-    R(8, 6, 8, 8, C.skin);
-    R(8, 4, 8, 3, C.hair);
-    R(7, 5, 1, 3, C.hair);
-    R(16, 5, 1, 3, C.hair);
-    R(9, 4, 6, 1, "#c9c6bf");
-
-    // olhos (sorrindo quando feliz)
-    if (s.mood === "happy") {
-      R(9, 9, 2, 1, C.eye);
-      R(13, 9, 2, 1, C.eye);
-    } else {
-      R(9, 8, 2, 2, C.eye);
-      R(13, 8, 2, 2, C.eye);
-    }
-
-    // boca
-    if (s.talking) {
-      if (Math.floor(t / 3) % 2 === 0) R(11, 11, 2, 2, C.mouth);
-      else R(11, 11, 2, 1, C.mouth);
-    } else if (s.mood === "happy") {
-      R(10, 11, 4, 1, C.mouth);
-      R(10, 10, 1, 1, C.mouth);
-      R(13, 10, 1, 1, C.mouth);
-    } else if (s.mood === "sad") {
-      R(10, 12, 4, 1, C.mouth);
-      R(10, 11, 1, 1, C.mouth);
-      R(13, 11, 1, 1, C.mouth);
-    } else {
-      R(10, 11, 4, 1, C.mouth);
-    }
-
-    // braços
-    if (s.mood === "point") {
-      R(18, 15, 5, 2, C.suit);
-      R(22, 14, 2, 2, C.skin);
-      R(4, 15, 2, 7, C.suit);
-      R(4, 21, 2, 2, C.skin);
-    } else if (s.mood === "happy") {
-      R(3, 8, 2, 7, C.suit);
-      R(3, 6, 2, 2, C.skin);
-      R(19, 8, 2, 7, C.suit);
-      R(19, 6, 2, 2, C.skin);
-    } else {
-      R(4, 15, 2, 7, C.suit);
-      R(18, 15, 2, 7, C.suit);
-      R(4, 21, 2, 2, C.skin);
-      R(18, 21, 2, 2, C.skin);
-      // microfone de lapela na mão direita
-      R(19, 20, 1, 3, C.mic);
-    }
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(sheet, f.x, f.y, f.w, f.h, dx, y, f.w, f.h);
   }
 
+  sheet.addEventListener("load", frame);
+
   return {
-    setMood(m) { s.mood = m; },
-    setTalking(v) { s.talking = v; },
+    setMood(m) { s.mood = m; frame(); },
+    setTalking(v) { s.talking = v; frame(); },
     start() {
+      frame();
       if (!s.iv) s.iv = setInterval(frame, 110);
     },
   };

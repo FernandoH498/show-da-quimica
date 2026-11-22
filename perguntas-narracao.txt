@@ -1,0 +1,182 @@
+﻿PERGUNTAS - SHOW DA QUÍMICA (20 perguntas)
+Resposta: sempre indicada no bloco. No jogo, as alternativas são embaralhadas.
+
+#1 [Fácil]
+Pergunta: Segundo a regra do octeto, quantos elétrons a maioria dos átomos 'quer' ter na camada de valência?
+  A) 8
+  B) 2
+  C) 4
+  D) 6
+Resposta: A
+Explicação: A regra do octeto diz que muitos átomos ficam estáveis com 8 elétrons na última camada, como os gases nobres.
+
+#2 [Fácil]
+Pergunta: A ligação iônica acontece normalmente entre:
+  A) Um metal e um ametal
+  B) Dois ametais
+  C) Dois metais
+  D) Dois gases nobres
+Resposta: A
+Explicação: O metal perde elétrons (vira cátion) e o ametal ganha (vira ânion).
+
+#3 [Fácil]
+Pergunta: A ligação covalente acontece normalmente entre:
+  A) Ametais (ou ametal e hidrogênio)
+  B) Um metal e um ametal
+  C) Apenas metais
+  D) Gases nobres e metais
+Resposta: A
+Explicação: Ametais e hidrogênio tendem a ganhar elétrons, então compartilham pares de elétrons.
+
+#4 [Fácil]
+Pergunta: Um átomo que PERDE elétrons se transforma em:
+  A) Cátion (íon positivo)
+  B) Ânion (íon negativo)
+  C) Molécula
+  D) Isótopo
+Resposta: A
+Explicação: Perdeu elétrons (cargas negativas) → sobram mais prótons → carga positiva: cátion.
+
+#5 [Fácil]
+Pergunta: O sal de cozinha (NaCl) é formado por qual tipo de ligação?
+  A) Iônica
+  B) Covalente
+  C) Metálica
+  D) Nuclear
+Resposta: A
+Explicação: Na (metal) perde 1 elétron para o Cl (ametal): Na⁺ e Cl⁻ se atraem.
+
+#6 [Fácil]
+Pergunta: O modelo do 'mar de elétrons' explica qual tipo de ligação?
+  A) Metálica
+  B) Iônica
+  C) Covalente
+  D) Dos gases nobres
+Resposta: A
+Explicação: Na ligação metálica, elétrons livres circulam entre os cátions do metal.
+
+#7 [Médio]
+Pergunta: O sódio (Z = 11) tem distribuição 2, 8, 1. Para ficar estável, ele tende a:
+  A) Perder 1 elétron
+  B) Ganhar 7 elétrons
+  C) Ganhar 1 elétron
+  D) Perder 2 elétrons
+Resposta: A
+Explicação: É mais fácil perder 1 elétron e ficar com 2, 8 (octeto) virando Na⁺.
+
+#8 [Médio]
+Pergunta: Qual é a fórmula do composto formado por Mg²⁺ e Cl⁻?
+  A) MgCl₂
+  B) MgCl
+  C) Mg₂Cl
+  D) Mg₂Cl₃
+Resposta: A
+Explicação: Precisa de 2 Cl⁻ (−2) para neutralizar 1 Mg²⁺ (+2).
+
+#9 [Médio]
+Pergunta: Qual é a fórmula do composto formado por Al³⁺ e O²⁻?
+  A) Al₂O₃
+  B) AlO
+  C) Al₃O₂
+  D) AlO₃
+Resposta: A
+Explicação: 2 × (+3) = +6 e 3 × (−2) = −6. Regra prática: cruzar as cargas.
+
+#10 [Médio]
+Pergunta: Na molécula de O₂, os dois átomos de oxigênio estão unidos por uma ligação:
+  A) Dupla
+  B) Simples
+  C) Tripla
+  D) Iônica
+Resposta: A
+Explicação: Cada O precisa de 2 elétrons: compartilham 2 pares → O=O.
+
+#11 [Médio]
+Pergunta: Na molécula de N₂, os dois átomos de nitrogênio estão unidos por uma ligação:
+  A) Tripla
+  B) Simples
+  C) Dupla
+  D) Iônica
+Resposta: A
+Explicação: Cada N precisa de 3 elétrons: compartilham 3 pares → N≡N.
+
+#12 [Médio]
+Pergunta: Por que o sal conduz eletricidade dissolvido em água, mas não no estado sólido?
+  A) Na água, os íons ficam livres para se mover
+  B) No sólido há elétrons livres demais
+  C) A água transforma o sal em metal
+  D) Os íons desaparecem no sólido
+Resposta: A
+Explicação: No cristal sólido os íons estão presos; dissolvidos, podem se mover e conduzir corrente.
+
+#13 [Médio]
+Pergunta: Qual é o elemento mais eletronegativo da tabela periódica?
+  A) Flúor
+  B) Sódio
+  C) Hélio
+  D) Ferro
+Resposta: A
+Explicação: O flúor é o campeão em atrair elétrons.
+
+#14 [Difícil]
+Pergunta: O nitreto de magnésio é formado por Mg²⁺ e N³⁻. Sua fórmula é:
+  A) Mg₃N₂
+  B) MgN
+  C) Mg₂N₃
+  D) MgN₂
+Resposta: A
+Explicação: 3 × (+2) = +6 e 2 × (−3) = −6.
+
+#15 [Difícil]
+Pergunta: Qual é a geometria da molécula de água?
+  A) Angular
+  B) Linear
+  C) Tetraédrica
+  D) Trigonal plana
+Resposta: A
+Explicação: Os 2 pares livres do oxigênio empurram as ligações, formando um 'V' (~104,5°).
+
+#16 [Difícil]
+Pergunta: A molécula de CO₂ tem ligações polares, mas a molécula como um todo é:
+  A) Apolar, porque é simétrica
+  B) Polar, porque tem oxigênio
+  C) Iônica
+  D) Metálica
+Resposta: A
+Explicação: Os dois polos se anulam por estarem em lados opostos.
+
+#17 [Difícil]
+Pergunta: Qual destas substâncias apresenta ligações iônicas E covalentes ao mesmo tempo?
+  A) Hidróxido de sódio (NaOH)
+  B) Água (H₂O)
+  C) Cloreto de sódio (NaCl)
+  D) Gás oxigênio (O₂)
+Resposta: A
+Explicação: Na⁺ e OH⁻ se atraem (iônica), e dentro do OH⁻ o O e o H compartilham elétrons (covalente).
+
+#18 [Difícil]
+Pergunta: Mg²⁺, O²⁻ e o átomo de neônio têm 10 elétrons cada. Eles são chamados de:
+  A) Isoeletrônicos
+  B) Isótopos
+  C) Alótropos
+  D) Ligas
+Resposta: A
+Explicação: Isoeletrônicos = espécies com o mesmo número de elétrons.
+
+#19 [Difícil]
+Pergunta: Por que o grafite conduz eletricidade e o diamante não?
+  A) O grafite tem elétrons que se movem entre suas camadas
+  B) O diamante é um metal
+  C) O grafite é um composto iônico
+  D) O diamante tem íons livres
+Resposta: A
+Explicação: No grafite cada C faz 3 ligações e 'sobra' um elétron móvel; no diamante todos estão presos.
+
+#20 [Difícil]
+Pergunta: Por que o óleo não se mistura com a água?
+  A) O óleo é apolar e a água é polar
+  B) O óleo é iônico
+  C) A água é apolar
+  D) O óleo é um metal
+Resposta: A
+Explicação: 'Semelhante dissolve semelhante': polar com polar, apolar com apolar.

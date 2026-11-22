@@ -1,56 +1,71 @@
-// Voz do apresentador: síntese de voz do próprio navegador (pt-BR), sem serviço externo.
+// Voz do apresentador: áudios gravados em assets/voz/*.mp3 (sem síntese do navegador).
 
 let enabled = true;
+let seqId = 0;
+let timerId = null;
+const player = new Audio();
+player.preload = "auto";
 
 export function setVoiceEnabled(v) {
   enabled = v;
   if (!v) cancelSpeech();
 }
 
-function pickVoice() {
-  try {
-    const voices = window.speechSynthesis.getVoices();
-    return voices.find((v) => v.lang && v.lang.toLowerCase().startsWith("pt")) || null;
-  } catch {
-    return null;
-  }
-}
-
-// Fala o texto e chama done() quando termina (ou após um tempo estimado, se não houver voz).
-export function speak(text, done) {
-  let finished = false;
-  const fin = () => {
-    if (finished) return;
-    finished = true;
-    done();
-  };
-  const hasSpeech = "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined";
-  if (!enabled || !hasSpeech) {
-    setTimeout(fin, Math.min(3000, 800 + text.length * 40));
-    return;
-  }
-  try {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "pt-BR";
-    u.rate = 1.02;
-    u.pitch = 0.85;
-    const v = pickVoice();
-    if (v) u.voice = v;
-    u.onend = fin;
-    u.onerror = fin;
-    window.speechSynthesis.speak(u);
-    // rede de segurança: alguns navegadores não disparam onend
-    setTimeout(fin, Math.min(25000, 4000 + text.length * 120));
-  } catch {
-    fin();
-  }
+export function questionKey(id) {
+  return `p${String(id).padStart(2, "0")}`;
 }
 
 export function cancelSpeech() {
-  try {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-  } catch {
-    /* ignora */
+  seqId++;
+  clearTimeout(timerId);
+  timerId = null;
+  player.onended = null;
+  player.onerror = null;
+  player.pause();
+  player.currentTime = 0;
+}
+
+// Reproduz um áudio (string) ou lista sequencial de áudios em assets/voz/<key>.mp3.
+// Chama onStep(key) ao iniciar cada faixa e done() ao concluir tudo (ou imediatamente se voz desligada).
+export function playVoice(keys, done, onStep) {
+  cancelSpeech();
+  const list = Array.isArray(keys) ? keys.filter(Boolean) : [keys].filter(Boolean);
+  if (!enabled || !list.length) {
+    if (done) done();
+    return;
   }
+
+  const mySeq = seqId;
+  let idx = 0;
+
+  function next() {
+    if (mySeq !== seqId) return;
+    if (idx >= list.length) {
+      if (done) done();
+      return;
+    }
+    const key = list[idx++];
+    if (onStep) onStep(key);
+    player.src = `assets/voz/${key}.mp3`;
+    player.currentTime = 0;
+    player.onended = next;
+    player.onerror = next;
+    const p = player.play();
+    if (p && typeof p.catch === "function") {
+      p.catch(() => {
+        if (mySeq === seqId) next();
+      });
+    }
+  }
+
+  next();
+}
+
+export function delayVoice(ms, fn) {
+  const mySeq = seqId;
+  clearTimeout(timerId);
+  timerId = setTimeout(() => {
+    timerId = null;
+    if (mySeq === seqId) fn();
+  }, ms);
 }
