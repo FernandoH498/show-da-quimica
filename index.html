@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Show da Química — Ligações Químicas</title>
+  <meta name="description" content="Quiz de ligações químicas no formato de show de perguntas, para o 9º ano.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="bulbs" aria-hidden="true"></div>
+
+  <header class="logo">
+    <h1>SHOW DA QUÍMICA</h1>
+    <p>ligações químicas · 9º ano</p>
+  </header>
+
+  <main>
+    <!-- TELA 1: abertura -->
+    <section id="screen-start" class="screen active">
+      <div class="host-box">
+        <canvas id="host-start" class="host" aria-label="Seu Valêncio, apresentador"></canvas>
+      </div>
+      <div class="card">
+        <p class="speech">Boa noite, boa noite! Eu sou o <b>Seu Valêncio</b> e hoje o assunto é
+          <b>ligação química</b>! Responda 16 perguntas e vale até <b>1 milhão de pontos</b>!</p>
+        <div class="opts">
+          <label><input type="checkbox" id="opt-sound" checked> Música e efeitos</label>
+          <label><input type="checkbox" id="opt-voice" checked> Voz do apresentador</label>
+          <label><input type="checkbox" id="opt-timer" checked> Cronômetro de 30 s</label>
+        </div>
+        <button id="btn-start" class="btn big">COMEÇAR O SHOW</button>
+        <details class="rules">
+          <summary>Como jogar</summary>
+          <ul>
+            <li>Escolha A, B, C ou D (clique ou tecla da letra).</li>
+            <li>Cada acerto sobe um degrau na escada de prêmios. Ao errar, você leva o último <b>patamar seguro</b> (10 mil ou 300 mil).</li>
+            <li><b>50/50</b>: remove duas alternativas erradas.</li>
+            <li><b>Universitários</b>: mostra a opinião da plateia.</li>
+            <li><b>Pular</b> (3 vezes): troca a pergunta sem perder nada.</li>
+            <li><b>Parar</b>: leva o prêmio atual, sem risco.</li>
+            <li>Depois de cada resposta aparece a explicação, para aprender com o erro.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+
+    <!-- TELA 2: jogo -->
+    <section id="screen-game" class="screen">
+      <div class="topbar">
+        <span id="round" class="round"></span>
+        <span id="timer" class="timer">30</span>
+        <span id="prize" class="prize"></span>
+      </div>
+
+      <div class="game-grid">
+        <aside class="left">
+          <div class="host-box small">
+            <canvas id="host-game" class="host" aria-label="Seu Valêncio"></canvas>
+            <div id="bubble" class="bubble" aria-live="polite"></div>
+          </div>
+          <div class="lifelines">
+            <button id="ll-cartas" class="ll">50/50</button>
+            <button id="ll-plateia" class="ll">Universitários</button>
+            <button id="ll-pular" class="ll">Pular (3)</button>
+            <button id="btn-stop" class="ll stop">Parar</button>
+          </div>
+          <div id="poll" class="poll hidden"></div>
+        </aside>
+
+        <div class="right">
+          <div class="question-box"><p id="question"></p></div>
+          <div id="options" class="options"></div>
+          <div id="feedback" class="feedback hidden">
+            <h3 id="fb-title"></h3>
+            <p id="fb-text"></p>
+            <button id="btn-next" class="btn">PRÓXIMA ➜</button>
+          </div>
+        </div>
+
+        <ol id="ladder" class="ladder" aria-label="Escada de prêmios"></ol>
+      </div>
+
+      <div class="ctrl">
+        <button id="btn-voice" class="ghost">Voz: ligada</button>
+        <button id="btn-mute" class="ghost">Som: ligado</button>
+      </div>
+    </section>
+
+    <!-- TELA 3: fim -->
+    <section id="screen-end" class="screen">
+      <div class="host-box">
+        <canvas id="host-end" class="host" aria-label="Seu Valêncio"></canvas>
+      </div>
+      <div class="card">
+        <h2 id="end-title"></h2>
+        <p id="end-prize" class="end-prize"></p>
+        <p id="end-text" class="speech"></p>
+        <button id="btn-again" class="btn big">JOGAR DE NOVO</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="curtain" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
